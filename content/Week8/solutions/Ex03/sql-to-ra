@@ -1,0 +1,49 @@
+--
+select * from R where a > 5;
+
+Sel[a>5](R)
+
+
+--
+select * from R where id = 1234 and a > 5;
+
+Sel[id=1234 & a>5](R)
+
+Sel[a>5](Sel[id=1234](R))
+
+
+
+--
+select R.a from R, S where R.id = S.j;
+select R.a from R join S on R.id = S.j;
+
+Proj[a](R join S)   or   Proj[a](S join R)
+
+Proj[a](Proj[a,id](R) Join Proj[j](S))
+
+Proj[a](R Join Proj[j](S))
+
+Proj[a](R Join sort(proj[j](S)))   if R sorted, then sort-merge join
+
+
+--
+select * from R,S where R.id=S.j and R.a=6
+
+Sel[a=6](R Join S)
+
+((Sel[a=6]R) Join S)
+(S Join (Sel[a=6]R))
+
+
+--
+select R.a from R, S, T where R.id = S.j and S.k = T.y;
+
+Proj[a]((R Join S) Join T)
+
+Proj[a](R Join (S Join T))
+
+Proj[a]((S Join T) Join R)
+
+Proj[a]((T Join S) Join R)
+
+Proj[a](S Join[R.id = S.j & S.k = T.y] (R X T)) NOT useful

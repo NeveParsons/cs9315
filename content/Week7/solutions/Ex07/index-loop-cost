@@ -1,0 +1,78 @@
+Consider executing Join[i=j](S,T) with the following parameters:
+* rS = 1000,  bS = 50,  rT = 3000,  bT = 600
+* S.i is primary key, and T has index on T.j
+* T is sorted on T.j, each S tuple joins with 2 T tuples
+* DBMS has N = 12 buffers available for the join
+
+
+Method:
+* iterate over S
+* for each S tuple, select matching T tuples via index
+
+Assumptions:
+* index on T is Btree with two levels (3000 tuples)
+* Btree index entries contain PageIDs
+* x% of the time, matching T tuples are on diff pages
+  (x is small e.g. 10%)
+
+Cost: index nested loop join
+
+cS = 20, cT = 5
+
+read all pages of S = bS
+
+for each S tuple, use index
+
+cost of using index
+= traverse B-tree + scan one page
+                    (sometimes scan 2 pages)
+
+#pages = bS + (rS * Sel_T)
+       = 50 + (1000 * (2+1.10))
+       = 50 + 3100
+       ~ 3100
+
+#checks = rS * (cT + 0.10*cT)
+        = 1000 * (5.5)
+        ~ 5500
+
+# worst case, N=3
+#check for nested loop = rS * rT = 1000 + 1000 * 3000 = 3,001,000
+
+for N=12, 10-page chunks, 100 of them
+cost = 1000 + 10 * 3000 = 30,10can pages of T until T_j > S_i
+
+
+If we make T the outer relation
+* rS = 1000,  bS = 50,  rT = 3000,  bT = 600
+
+for each T tuple, use index to find 1 S tuple
+- always exactly one match
+- since T sorted, repeats of T.j require no extra reads
+- worst case: no repeated T.j values
+- good case: 50% of T.j values are repeated once
+
+#pages = bT + (rT*(1-Rep) * Sel_T)
+       = 600 + (rT*0.5 * Sel_T)
+       = 600 + (1500 * (2+1))
+       = 5100
+
+#checks = rT * cT
+
+
+Cost of block nested loop join:
+
+read S in 5 * 10-page chunks
+for each S tuple
+    scan pages of T until T_j > S_i
+                    (optimisation)
+
+average scan = bT/2
+
+#pages = bS + (10 * bT/2)
+       = 50 + (10 * 300)
+       ~ 3050
+
+#checks = rS * rT/2
+        = 1000 * 1500
+        = 1,500,000

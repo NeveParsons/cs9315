@@ -1,0 +1,47 @@
+Possible Schema
+===============
+
+Concerts(id, title, date, nseats, ...)
+
+People(id, name, email, ...)
+
+Ticket(concert_id, person_id, ...)   -- e.g,. seat#, price paid, ...
+
+
+Before/after states
+===================
+
+for each current_id in select id from concerts {
+  select count(*) into nsold from Tickets where concert_id = current_id
+  select nseats into nseats from concerts where id = current_id
+  if (nsold <= nseats) OK else BAD
+}
+
+
+Implementation
+===============
+
+sell_ticket(person, concert) {
+/*1*/
+  select count(*) into nsold from Tickets where concert_id = concert
+/*2*/
+  select nseats into nseats from concerts where id = concert
+/*3*/
+  if (nseats < nsold)
+    insert into Tickets values (concert, person)
+/*4*/
+}
+
+
+Failure Problems
+================
+
+No failure problems
+
+
+Concurrency Problems
+====================
+
+If two transactions reach /*1*/ simultaneously
+Both think there's one set available
+Both tx's sell a ticket

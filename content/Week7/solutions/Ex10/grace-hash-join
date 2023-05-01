@@ -1,0 +1,17 @@
+Grace hash join cost
+
+rR = 1000,  bR = 50,  rS = 3000,  bS = 150,  cRes = 30
+
+N = 43
+
+h(x) = x % 5
+
+partitioning R = 50 reads + ~50 writes  ... 5 partitions, each with ~10 pages
+partitioning S = 150 reads + ~150 writes ... 5 partitions, each with ~30 pages
+
+Prob join phase using 40-page hash table
+
+read each R partition into in-memory hash table
+for each R partition scan corresponding partition of S
+
+Cost = 3*(bR + bS) = 3*(~50 + ~150) = ~600

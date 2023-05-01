@@ -1,0 +1,14 @@
+t    Action        v  B(A)  B(B)  D(A)  D(B)  Log
+--------------------------------------------------------
+(0)  BEGIN         .    .     .     8     5   <START T>
+(1)  READ(A,v)     8    8     .     8     5
+(2)  v = v*2      16    8     .     8     5
+(3)  WRITE(A,v)   16   16     .     8     5   <T,A,16>
+(4)  READ(B,v)     5   16     5     8     5
+(5)  v = v+1       6   16     5     8     5
+(6)  WRITE(B,v)    6   16     6     8     5   <T,B,6>
+(7)  COMMIT                                   <COMMIT T>
+(8)  FlushLog
+(9)  OUTPUT(A)     6   16     6    16     5
+(10) OUTPUT(B)     6   16     6    16     6
+

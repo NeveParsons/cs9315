@@ -1,0 +1,34 @@
+DB stats:
+R is outer, S is inner
+r_R = 10000, b_R = 1000
+r_S = 20000, b_S = 2000
+
+
+block nested loop (N = 22)
+Cost = bR + bS.ceil(bS/(N-2)) 
+
+#pages = ??, #checks = 200,000,000
+
+index nested loop (N = 42)
+Cost = bR + rR.Sel[S]
+
+#pages = ??, #checks = ??
+
+sort-merge (N = 20)
+Cost = 2.bR.(1 + log[N-1](bR/N)) + 2.bS.(1 + log[N-1](bS/N)) + bR + bS
+
+#pages = ??, #checks = ??
+
+hash join (N = 32)
+Cost = bR + bS.ceil(bR/(N-3))
+
+#pages = ??, #check = ??
+
+grace hash join (N = ?)   (assumes largest partition fits in Buffers)
+Cost = 3(bR+bS) 
+#pages = ??, #check = ??
+
+hybrid hash join (N = ?)
+Cost = (3-1/k).(bR+bS)
+
+#pages = ??, $checks = ??

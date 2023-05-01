@@ -1,0 +1,62 @@
+Cost of (Student Join Enrolled)
+via block nested loop join
+
+for each "chunk" of OuterRelation {
+	read N-2 pages of Outer
+	for each page of InnerRelation {
+		read 1 page of InnerRelation
+		for each page in "chunk" {
+			for each pair of tuples t_Outer, t_Inner from these pages {
+				if satisfies join condition {
+					add (t_Outer:t_Inner) to result set
+			}
+		}
+	}
+}
+
+rS  # student records         20,000
+rE  # enrollment records      160,000
+cS  Student records/page      20
+cE  Enrolled records/page     40
+bS  # data pages in Student   1,000
+bE  # data pages in Enrolled  4,000
+N   # memory buffers          22
+
+
+N = 22,  S as outer,  50*20-page chunks of S
+
+1000 + 4000 * 50 = 201,000
+
+N = 22,  E as outer,  200*20-page chunks of E
+
+4000 + 1000 * 200 = 204,000
+
+
+
+Reminder: b_S = 1000, b_E = 4000
+
+N = 202,  S as outer,  5*200-page chunks of S
+
+1000 + 5 * 4000 = 1000 + 20000 = 21000
+
+N = 202,  E as outer,  20*200-page chunks of E
+
+4000 + 20 * 1000 = 4000 + 20000 = 24000
+
+
+Best case for join = b_S + b_E
+
+
+This gives the best case ...
+
+N = 2002,  S as outer,  1*1000-page chunk of S
+then read all 4000 pages of E
+1000 + 4000 = 5000
+
+Putting the larger table as Outer makes worse cost
+
+N = 2002,  E as outer,  2*2000-page chunk of E
+for each chunk, read 1000 pages of S
+4000 + 2*1000 = 6000
+
+

@@ -1,0 +1,29 @@
+Possible schema
+===============
+
+Flight(id, code, src, dest, depart, arrive, nseats, navail, nsold, ...)
+
+Passengers(id, name, email, ...)
+
+Seats(flight_id, code, pax_id, price)   -- pax_id is null if not booked
+
+
+Before/after states
+===================
+
+for each fid in select id from Flights {
+	select nseats, nsold from Flights where id = fid
+	if (nseats < nsold) BAD else OK
+}
+
+
+Implementation
+===============
+
+
+Failure Problems
+================
+
+
+Concurrency Problems
+====================
