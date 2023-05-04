@@ -1,0 +1,162 @@
+Consider the SQL table definition:
+
+create table Tab (
+    id      integer,
+    code    char(8),
+    avg     real,
+    primary key(id)
+);
+Assume that:
+
+integer values are 4 bytes long
+real values are 8 bytes long
+char(X) values occupy X bytes
+each tuple has a 4-byte header before the data
+pages are are B = 4KB in size
+each page has a 96-byte header; the rest of the page holds tuples
+there are r = 10000 tuples in the Tab table
+Calculate the following:
+
+  R = the size of each tuple (in bytes)
+
+  c = the number of tuples in each page
+
+  b = the total number of pages needed to store Tab tuples
+
+
+
+
+
+
+
+
+
+Duplicate removal in projection can be implemented using either sorting or hashing.
+
+Consider a projection scenario where
+
+the original tuples are Ro = 40 bytes long
+the projected tuples are Rp = 20 bytes long
+the original file has bo = 200 pages
+the projected file (with duplicates) has bp = 100 pages
+the result file (no duplicates) has br = 80 pages
+Assume that we have a buffer pool with B = 31 buffers available for exclusive use of the projection operation. Assume also that the hash function distributes tuples evenly, and that the total number of pages in the hash partitions is the same as bp.
+
+  calculate the total cost of projection using sorting for duplicate removal
+
+  calculate the total cost of projection using hashing for duplicate removal
+
+Costs are in terms of total page read/writes. Include the cost of reading the original file and the cost of writing the result file.
+
+State all assumptions. Show all working.
+
+
+
+
+
+
+Consider a linear hashed file with the following properties
+
+initially with 2 (empty) pages in the file, d = 1, sp = 0
+able to hold up to 2 tuples per page
+an associated overflow file (initially empty, no pages)
+each page in the overflow file can also hold up to 2 tuples
+A set of numeric keys (the numbers 1 to 32) are inserted into the file, in numeric order. Splits occur just before the insertion of the keys 6, 12, 18, 24, 30 The hash value of each key is simply the binary value of the number (e.g. hash(1) = 00000001, hash(15) = 00001111, and hash(21) = 00010101).
+
+Show the state of the file(s) at the following points:
+
+immediately before each split operation (before inserting the new value)
+
+immediately after each split operation and after inserting the new value
+
+The state should include:
+
+the pages of the data file, with tuples indicated by key values
+the depth of the file (d), the position of the split pointer (sp)
+any overflow pages, linked to their corresponding data pages by arrows
+An abstract example (not using the above hash values) of what a state might look like:
+
+[0] 1,2 -> 11,12
+[1] 3,4
+[2] 5,6 -> 13
+[3] 7,8 -> 14,15 -> 16
+[4] 9,10
+
+d = 2 sp = 1
+This is a sample just to show the format of states. It bears no relation to the hash values in this question.
+
+
+
+
+
+
+
+
+
+
+
+
+Translate the SQL queries below into an efficient sequence of relational algebra operations. Use the notation for relational algebra operations from the Course Notes i.e.
+
+Selection:   Sel[Condition]Relation
+
+Projection:   Proj[AttrList]Relation
+
+Join:   Rel1 Join[Condition] Rel2
+
+Set Union:   Rel1 U Rel2
+
+Set Intersection:   Rel1 ^ Rel2
+
+Set Membership:   (Attr in RelWithOneAttr)   (is used as a boolean expression)
+
+When showing complex relational algebra, write it as a sequence of "assignment" statements, with a single relational algebra operation on the right hand side, and a temporary relation to hold the result on the left hand side. The temporary relation can be used in subsequent "assignment" statements.
+
+Example: select x,y from R where z = 5; is rendered as:
+
+Tmp1 = Sel[z=5] R
+Res  = Proj[x,y] Tmp1
+Write relational algebra operations for each of these operations on the tables R(a,b,c) and S(c,d) and T(d,e,f,g)
+
+select * from S where c = 5 and d = 8
+select a,d from R join S on R.c = S.c
+select *
+from   R
+where  c in (select c from S where d = 3)
+select a,f,g
+from   R join S on (R.c = S.c) join T on (S.d = T.d)
+where  R.b = 2 and S.c = 5 and T.e = 10
+You do not need to worry about the sizes of tables, intermediate result, projected tuples, number of memory buffers, etc. in answering this question. Treat this as the initial relational algebra transformation stage after parsing the SQL and before query optimisation, and apply the common heuristics used in this phase.
+
+State all assumptions. Show all working.
+
+
+
+
+
+
+
+
+Consider the following collection of (very unrealistically sized) superimposed codeword page descriptors and their corresponding bit-sliced version. Page desciptors are 10-bits long, and there are 8 pages. Bit-slices are 8-bits long and there are 10 of them.
+
+Page descriptors         Bit Slices
+================         ==========
+[0] 0100010110           [0] 01010110
+[1] 1000110010           [1] 10100101
+[2] 0101010100           [2] 00010110
+[3] 1010101010           [3] 00101110
+[4] 0001111000           [4] 01011001
+[5] 1111000000           [5] 11101001
+[6] 1011000001           [6] 00011000
+[7] 0100110100           [7] 10100001
+                         [8] 11010000
+                         [9] 00000010
+Given the query descriptor 0100010100 ...
+
+Show how the slice of potentially matching pages is derived.
+Start from a "matching slice" containing 11111111, and show all intermediate values of the matching slice.
+
+State which pages contain potential matches.
+Bit [0] in a slice corresponds to page [0], bit [1] in a slice corresponds to page [1], etc.
+
+State all assumptions. Show all working.
