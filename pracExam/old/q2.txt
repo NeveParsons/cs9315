@@ -1,0 +1,13 @@
+# COMP9315 20T1 Sample Exam Q2
+
+Type your answer(s) to replace the xxx's
+
+(a) catalog tuples produced for CREATE TYPE Gender ...
+
+xxx
+
+
+(b) catalog tuples produced for CREATE TABLE People ...
+
+xxx
+
